@@ -1,0 +1,808 @@
+/* ======================================================================
+   01. Палитра. Цвета и шрифты взяты со страницы правил.
+   script.js выбирает светлую / тёмную тему; фон родительского форума не меняется.
+   ====================================================================== */
+:root {
+  color-scheme: light;
+  --role-bg: #ffffff;
+  --role-surface: #f4f6f8;
+  --role-text: #273240;
+  --role-muted: #626d7a;
+  --role-line: #dfe5eb;
+  --role-blue: #367cc4;
+  --role-accent: var(--role-blue);
+  --sheet-width: 1000px;
+  --sheet-gutter: 38px;
+  --hero-art-height: 520px;
+  --hero-banner-height: 280px;
+}
+
+/* Тёмный фон взят с приложенного образца. Синий — единственный акцент. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --role-bg: #1a1a1a;
+  --role-surface: #22262d;
+  --role-text: #edf0f5;
+  --role-muted: #b3b4b6;
+  --role-line: #333943;
+  --role-blue: #78b4ee;
+}
+[data-accent="blue"] {
+  --role-accent: var(--role-blue);
+}
+
+/* 02. Шрифты из assets/fonts. Файлы загружаются с того же GitHub Pages. */
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/jost-regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Jost";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/jost-bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Oracle";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/oracle-semibold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Pulp";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/pulp-bold.woff2") format("woff2");
+}
+
+/* 03. Общие настройки. Нет фиксированной высоты или отдельной прокрутки внутри анкеты. */
+* {
+  box-sizing: border-box;
+}
+html {
+  margin: 0;
+  background: var(--role-bg);
+}
+body {
+  margin: 0;
+  color: var(--role-text);
+  background: var(--role-bg);
+  font: 16px/1.72 "Jost", Arial, sans-serif;
+}
+main {
+  position: relative;
+  width: min(100%, var(--sheet-width));
+  margin: 0 auto;
+  padding: 56px var(--sheet-gutter) 52px;
+}
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+h1, h2, h3, p, figure, blockquote, dl, dd {
+  margin: 0;
+}
+p + p {
+  margin-top: 16px;
+}
+h1, h2, h3 {
+  text-wrap: balance;
+}
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 24px;
+  font: 600 29px/1.2 "Oracle", "Jost", sans-serif;
+}
+h3 {
+  font-size: 21px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+figure {
+  min-width: 0;
+}
+figcaption {
+  margin-top: 11px;
+  color: var(--role-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+blockquote {
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--role-accent);
+}
+
+/* 04. Paper highlight — тот же бумажный акцент, что в правилах. */
+.paper-highlight {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  padding: .2em .35em;
+  margin: 0 2px 3px;
+  color: var(--role-surface);
+  font: 600 14px/1.2 "Pulp", "Jost", sans-serif;
+  vertical-align: baseline;
+}
+.paper-highlight::before {
+  content: "";
+  position: absolute;
+  inset: .08em 0 -.04em;
+  z-index: -1;
+  background: var(--role-accent);
+  rotate: -.5deg;
+}
+
+/* 05. Banner — шапка с именем; ростовая фигура немного выступает за плашку. */
+.Banner {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 270px;
+  gap: 25px;
+  align-items: center;
+  min-height: var(--hero-banner-height);
+  padding: 28px 36px;
+  margin: 120px 0 140px;
+  border-radius: 16px;
+}
+.Banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--role-accent) 17%, var(--role-surface));
+}
+.Banner > div {
+  min-width: 0;
+  padding-block: 0;
+}
+.Banner h1 {
+  margin-left: -4px;
+  margin-bottom: 16px;
+  color: var(--role-accent);
+  font: 600 clamp(60px, 7.2vw, 76px)/1 "Pulp", "Jost", sans-serif;
+  letter-spacing: .01em;
+}
+.Banner .Tags {
+  display: flex;
+  gap: 5px 9px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.Banner .Tags .paper-highlight {
+  margin-left: 0;
+}
+.Banner blockquote {
+  max-width: 33ch;
+  margin-top: 18px;
+  padding-top: 13px;
+  border-top: 1px solid color-mix(in srgb, var(--role-accent) 25%, transparent);
+  color: var(--role-text);
+  font-size: 18px;
+  line-height: 1.5;
+}
+.Banner blockquote::before {
+  content: "“";
+  display: block;
+  height: 15px;
+  margin-bottom: 5px;
+  color: var(--role-accent);
+  font: 38px/1 Georgia, serif;
+}
+.Banner .Figure {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 252px;
+  margin: 0;
+  transform: translateY(-50%);
+  rotate: 1deg;
+}
+.Banner .Figure img {
+  width: 100%;
+  height: var(--hero-art-height);
+  object-fit: contain;
+}
+
+/* 06. Facts — краткие сведения под шапкой. */
+.Facts {
+  display: grid;
+  grid-template-columns: .8fr .65fr 1.3fr 1.25fr;
+  gap: 24px;
+  margin: 0 0 64px;
+  padding: 4px 0 25px;
+  border-bottom: 1px solid var(--role-line);
+}
+.Facts > div {
+  min-width: 0;
+}
+.Facts dt {
+  margin-bottom: 7px;
+  color: var(--role-accent);
+  font-size: 12px;
+  font-weight: 500;
+}
+.Facts dd {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.Facts--measure {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 220px;
+  margin-bottom: 23px;
+  padding-bottom: 16px;
+  gap: 15px;
+}
+.Facts--measure dt {
+  margin-bottom: 3px;
+}
+.Facts--measure dd {
+  font-size: 22px;
+  font-weight: 500;
+}
+.Facts--measure small {
+  font-size: 13px;
+  color: var(--role-muted);
+  font-weight: 400;
+}
+
+/* 07. Step — текст и иллюстрация. Reverse меняет стороны только на широком экране. */
+.Step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 265px;
+  align-items: start;
+  gap: 44px;
+  margin-bottom: 70px;
+}
+.Step > * {
+  min-width: 0;
+}
+.Step--reverse {
+  grid-template-columns: 285px minmax(0, 1fr);
+}
+.Step--reverse > :first-child {
+  grid-column: 2;
+  grid-row: 1;
+}
+.Step--reverse > :last-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+.Step--reverse blockquote {
+  margin: 19px 0 21px;
+  font-size: 20px;
+}
+.Step--reverse .Figure {
+  margin-top: 62px;
+  rotate: -.5deg;
+}
+.Step--reverse .Figure figcaption {
+  rotate: .5deg;
+}
+.Step--story {
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 36px;
+  margin-bottom: 35px;
+}
+.Step--story > h3 {
+  padding-top: 5px;
+  color: var(--role-accent);
+}
+.Step--story > div {
+  max-width: 68ch;
+}
+.Step--closing {
+  grid-template-columns: minmax(0, 1fr) 210px;
+  gap: 52px;
+  margin-top: 10px;
+  margin-bottom: 58px;
+}
+.Step--closing h3 {
+  margin-bottom: 19px;
+  color: var(--role-accent);
+}
+.Step--closing .Figure {
+  rotate: .5deg;
+}
+.ChapterMark {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--role-muted);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .1em;
+}
+
+/* 08. Badge — знакомый текстурный круг; рисунок внутри не поворачивается. */
+.Badge {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  color: var(--role-bg);
+}
+.Badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--role-accent);
+  mask: url("./assets/badge-circle.webp") center/contain no-repeat;
+  rotate: var(--badge-rotation, 0deg);
+}
+.Badge svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* 09. Figure — исходные иллюстрации без рамок, подложек и теней. */
+.Figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.Figure--portrait {
+  rotate: 1deg;
+}
+
+/* Внешность: общая шапка, затем две композиции с разным порядком колонок. */
+.Step--appearance {
+  display: block;
+}
+.Step--appearance > header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.Step--appearance > header h2 {
+  margin-bottom: 0;
+}
+.Step--appearance > header .Facts {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.Step--appearance > .Step {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: center;
+  gap: 42px;
+  margin-bottom: 34px;
+}
+.Step--appearance > .Step > .Figure--portrait {
+  margin: -12px -7px 0 0;
+}
+.Step--appearance > .Step--reverse {
+  grid-template-columns: 300px minmax(0, 1fr);
+  align-items: center;
+  margin-bottom: 0;
+}
+.Step--appearance .Details {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0 8px;
+}
+.Step--appearance .Details .Figure {
+  margin: 0;
+}
+.Step--appearance .Details .Figure:first-child {
+  width: 77%;
+  rotate: -4deg;
+}
+.Step--appearance .Details .Figure:last-child {
+  position: relative;
+  width: 64%;
+  margin: -35px 0 0 auto;
+  rotate: 3deg;
+}
+.Step--appearance .Details figcaption {
+  margin-top: 5px;
+  font-size: 11px;
+}
+.Step--appearance .Details .Figure:first-child figcaption {
+  text-align: left;
+}
+
+/* 10. История — единый поток текста; подзаголовки разделяют исходные абзацы. */
+.Story {
+  margin-top: 0;
+  padding-top: 35px;
+  border-top: 1px solid var(--role-line);
+}
+.Story > h2 {
+  margin-bottom: 35px;
+}
+
+/* 11. Note — единственная заметка в анкете: личные вещи. */
+.Note {
+  width: 75%;
+  margin: 5px auto 14px;
+  padding: 22px 25px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--role-accent) 25%, var(--role-surface));
+  rotate: .5deg;
+  box-shadow: 6px 7px 0 color-mix(in srgb, var(--role-accent) 14%, transparent);
+}
+.Note h2 {
+  margin-bottom: 14px;
+  color: var(--role-accent);
+  font-family: "Jost", sans-serif;
+  font-size: 23px;
+  font-weight: 700;
+}
+.Note h2 svg {
+  width: 22px;
+  height: 22px;
+}
+.Note table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.Note th, .Note td {
+  padding: 12px 10px;
+  vertical-align: top;
+  text-align: left;
+}
+.Note th {
+  width: 35%;
+  padding-left: 0;
+  color: var(--role-accent);
+  font-weight: 500;
+}
+.Note td {
+  padding-right: 0;
+}
+.Note tr + tr {
+  border-top: 1px solid color-mix(in srgb, var(--role-accent) 22%, transparent);
+}
+
+/* 12. Переключатель темы. Ручной выбор сохраняется, если браузер разрешает хранение. */
+.ThemeToggle {
+  position: absolute;
+  top: 12px;
+  right: var(--sheet-gutter);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--role-line);
+  border-radius: 50%;
+  color: var(--role-accent);
+  background: var(--role-bg);
+  cursor: pointer;
+}
+.ThemeToggle svg {
+  width: 19px;
+  height: 19px;
+}
+.ThemeToggle:hover {
+  background: color-mix(in srgb, var(--role-accent) 12%, var(--role-bg));
+}
+.ThemeToggle:focus-visible {
+  outline: 2px solid var(--role-accent);
+  outline-offset: 3px;
+}
+.ThemeToggle .Sun {
+  display: none;
+}
+:root[data-theme="dark"] .ThemeToggle .Sun {
+  display: block;
+}
+:root[data-theme="dark"] .ThemeToggle .Moon {
+  display: none;
+}
+
+/* 13. Узкий iframe: единый порядок — заголовок, текст, изображение. */
+@media (max-width: 740px) {
+  :root {
+    --sheet-gutter: 25px;
+  }
+  main {
+    padding-top: 35px;
+  }
+  .Banner {
+    min-height: 270px;
+    padding: 24px;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) 210px;
+    margin: 100px 0 120px;
+  }
+  .Banner .Figure img {
+    height: 460px;
+  }
+  .Banner h1 {
+    font-size: clamp(44px, 8vw, 60px);
+  }
+  .Banner .Lead {
+    font-size: 16px;
+  }
+  .Banner blockquote {
+    font-size: 17px;
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+  .Banner .Figure {
+    width: 222px;
+    right: 6px;
+  }
+  .Facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 25px;
+    margin-bottom: 45px;
+  }
+  .Facts--measure {
+    margin-bottom: 22px;
+  }
+  .Step, .Step--reverse {
+    grid-template-columns: minmax(0, 1fr) 210px;
+    gap: 27px;
+  }
+  .Step--reverse > :first-child, .Step--reverse > :last-child {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .Step--reverse .Figure {
+    margin-top: 65px;
+  }
+  .Step--story {
+    grid-template-columns: 115px minmax(0, 1fr);
+    gap: 25px;
+  }
+  .Step--closing {
+    grid-template-columns: minmax(0, 1fr) 160px;
+  }
+  .Step h2 {
+    font-size: 26px;
+  }
+  .Step h3 {
+    font-size: 19px;
+  }
+  .Step--appearance > header {
+    grid-template-columns: minmax(0, 1fr) 175px;
+    gap: 20px;
+  }
+  .Step--appearance > .Step {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 28px;
+  }
+  .Step--appearance > .Step--reverse {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .Step--appearance > .Step--reverse > :first-child {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .Step--appearance > .Step--reverse > :last-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .Note {
+    width: 90%;
+  }
+}
+@media (max-width: 560px) {
+  :root {
+    --sheet-gutter: 21px;
+  }
+  body {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  main {
+    padding-top: 56px;
+    padding-bottom: 35px;
+  }
+  .Banner {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 25px 24px 0;
+    margin: 0 0 30px;
+  }
+  .Banner::before {
+    display: none;
+  }
+  .Banner > div {
+    position: relative;
+    isolation: isolate;
+  }
+  .Banner > div::before {
+    content: "";
+    position: absolute;
+    inset: -25px -24px -20px;
+    z-index: -1;
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--role-accent) 17%, var(--role-surface));
+  }
+  .Banner blockquote {
+    max-width: none;
+  }
+  .Banner .Figure img {
+    height: 360px;
+  }
+  .Banner > div {
+    padding-block: 0;
+  }
+  .Banner h1 {
+    font-size: clamp(56px, 15vw, 60px);
+  }
+  .Banner .Lead {
+    max-width: none;
+  }
+  .Banner .Tags {
+    gap: 5px 7px;
+  }
+  .Banner blockquote {
+    max-width: none;
+  }
+  .Banner .Figure {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: min(80%, 190px);
+    margin: 0 auto;
+  }
+  .Facts {
+    gap: 20px 18px;
+    margin-bottom: 40px;
+  }
+  .Facts dd {
+    font-size: 14px;
+  }
+  .Facts--measure {
+    max-width: 210px;
+    margin-bottom: 22px;
+  }
+  .Facts--measure dd {
+    font-size: 22px;
+  }
+  .Step, .Step--reverse, .Step--story, .Step--closing {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 23px;
+    margin-bottom: 42px;
+  }
+  .Step--story {
+    gap: 13px;
+    margin-bottom: 28px;
+  }
+  .ChapterMark {
+    display: inline;
+    margin-right: 10px;
+  }
+  .Step > aside {
+    width: min(100%, 290px);
+    justify-self: center;
+  }
+  .Step--reverse > .Figure {
+    width: min(100%, 285px);
+    justify-self: center;
+    margin-top: 0;
+  }
+  .Step--closing > .Figure {
+    width: min(75%, 220px);
+    justify-self: center;
+  }
+  .Step h2, .Story > h2 {
+    font-size: 26px;
+    gap: 11px;
+  }
+  .Step h3 {
+    font-size: 21px;
+  }
+  .Details {
+    margin-bottom: 5px;
+  }
+  .Story {
+    padding-top: 28px;
+  }
+  .Story > h2 {
+    margin-bottom: 26px;
+  }
+  .Step--appearance > header {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    margin-bottom: 25px;
+  }
+  .Step--appearance > header .Facts {
+    max-width: 220px;
+  }
+  .Step--appearance > .Step, .Step--appearance > .Step--reverse {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 23px;
+    margin-bottom: 30px;
+  }
+  .Step--appearance > .Step--reverse {
+    margin-bottom: 0;
+  }
+  .Step--appearance > .Step--reverse > :first-child, .Step--appearance > .Step--reverse > :last-child {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .Step--appearance > .Step > .Figure--portrait {
+    width: min(100%, 310px);
+    justify-self: center;
+    margin: 0;
+  }
+  .Step--appearance .Details {
+    width: min(100%, 300px);
+    justify-self: center;
+  }
+  .Note {
+    width: calc(100% - 5px);
+    margin-inline: 0;
+    padding: 20px;
+  }
+  .Note table {
+    font-size: 14px;
+  }
+  .Note th {
+    width: 39%;
+  }
+  .Note th, .Note td {
+    padding-block: 11px;
+  }
+}
+@media print {
+  :root {
+    color-scheme: light;
+    --role-bg: white;
+    --role-surface: #f4f5f7;
+    --role-text: #273240;
+    --role-muted: #5d6670;
+    --role-line: #d7dce2;
+    --role-blue: #367cc4;
+  }
+  main {
+    padding: 20px;
+  }
+  .Figure, .Note, h2, h3 {
+    break-inside: avoid;
+  }
+  h2, h3 {
+    break-after: avoid;
+  }
+  .ThemeToggle {
+    display: none;
+  }
+  .Banner {
+    min-height: 0;
+  }
+  .Banner .Figure {
+    position: static;
+    transform: none;
+    margin-block: 0;
+  }
+}
